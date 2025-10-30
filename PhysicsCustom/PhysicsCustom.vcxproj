@@ -132,10 +132,12 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PhysObject.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PhysObject.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>

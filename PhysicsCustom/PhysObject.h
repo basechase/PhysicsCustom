@@ -1,13 +1,14 @@
 #pragma once
 #include "glm/vec2.hpp"
 #include "World.h"
+#include "Shape.h"
 
 class PhysObject
 {
 public:
 	glm::vec2 Pos;
 	glm::vec2 Velocity;
-	World* World;
+	Shape MrShape;
 
 	bool AllowPhys;
 	glm::vec2 Accumulated;
@@ -16,6 +17,8 @@ public:
 
 
 	PhysObject();
+
+	void Draw() const;
 
 	void AddImpulse(glm::vec2 Vector);
 
