@@ -1,9 +1,9 @@
 #include "World.h"
 #include "raylib.h"
-
-World::World() : AccumulatdFixedTime(0), TargetFixedStep(1.0f/30)
+#include "PhysObject.h"
+World::World() : AccumulatdFixedTime(0), TargetFixedStep(1.0f/30), Gravity({0, 9.80665})
 {
-
+	
 }
 
 
@@ -30,6 +30,15 @@ void World::TickFixed()
 {
 	AccumulatdFixedTime += GetFrameTime();
 
+	for (auto Object : PhysObjects)
+	{
+		Object->TickPhys(TargetFixedStep);
+		
+		if (Object->AllowPhys)
+		{
+			Object->Velocity -= Gravity;
+		}
+	}
 	OnTick();
 }
 

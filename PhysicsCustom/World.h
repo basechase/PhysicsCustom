@@ -1,10 +1,17 @@
+#include <vector>
+#include <memory>
+#include "glm/vec2.hpp"
 #pragma once
+class PhysObject;
 class World
 {
 public:
 
+	std::vector<std::shared_ptr<PhysObject>> PhysObjects;
 
 	float TargetFixedStep;
+
+	glm::vec2 Gravity;
 
 	World();
 	// For initialization
