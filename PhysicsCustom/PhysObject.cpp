@@ -1,9 +1,18 @@
 #include "PhysObject.h"
 #include "raylib.h"
 
+
+
+
+
 PhysObject::PhysObject() : Pos({0,0}), Velocity({0,0}), mass(10.f)
 {
 
+}
+
+bool PhysObject::CheckCircleCircle(const glm::vec2& PosA, const Circle& CircleA, const glm::vec2& PosB, const Circle& CircleB)
+{
+	
 }
 
 void PhysObject::Draw() const
