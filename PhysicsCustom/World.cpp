@@ -12,7 +12,9 @@ void World::InIt()
 {
 	const int screenWidth = 800;
 	const int screenHeight = 450;
-
+	
+	
+	
 	InitWindow(screenWidth, screenHeight, "raylib examp woindow");
 
 	SetTargetFPS(60);
@@ -29,6 +31,9 @@ void World::Tick()
 void World::TickFixed()
 {
 	AccumulatdFixedTime += GetFrameTime();
+
+
+
 
 	for (auto Object : PhysObjects)
 	{

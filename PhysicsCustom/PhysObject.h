@@ -8,14 +8,14 @@ class PhysObject
 public:
 	glm::vec2 Pos;
 	glm::vec2 Velocity;
-	Shape MrShape;
+	Shape* MrShape;
 
 	bool AllowPhys;
 	glm::vec2 Accumulated;
 	glm::vec2 Acceleration;
 	float mass;
 
-	bool CheckCircleCircle(const glm::vec2& PosA, const Circle& CircleA, const glm::vec2& PosB, const Circle& CircleB);
+
 	
 
 	PhysObject();
