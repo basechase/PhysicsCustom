@@ -1,18 +1,24 @@
 #include "World.h"
 #include "raylib.h"
 #include "PhysObject.h"
+#include "EnumUtils.h"
+#include "unordered_map"
+using CollisionFunc = bool(*)(const glm::vec2&, const Shape&, const glm::vec2&, const Shape&);
+using CollisionMap = std::unordered_multimap<ShapeType, CollisionFunc>;
+CollisionMap Map;
+
+
 World::World() : AccumulatdFixedTime(0), TargetFixedStep(1.0f/30), Gravity({0, 9.80665})
 {
 	
 }
 
-
-
 void World::InIt()
 {
+	
+	Map[ShapeType::CIRCLE | ShapeType::CIRCLE] = CheckCircleCircle;
 	const int screenWidth = 800;
 	const int screenHeight = 450;
-	
 	
 	
 	InitWindow(screenWidth, screenHeight, "raylib examp woindow");
