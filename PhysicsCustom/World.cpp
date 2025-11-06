@@ -103,6 +103,7 @@ void World::OnTick()
 {
 	if (IsMouseButtonPressed(0))
 	{
+		std::cout << "left clicking" << std::endl;
 		PhysObject NewObj;
 		NewObj.MrShape.Type = ShapeType::CIRCLE;
 		NewObj.MrShape.CircleData.Radius = 25.0f;
