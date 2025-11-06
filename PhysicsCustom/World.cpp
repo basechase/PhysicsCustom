@@ -4,7 +4,7 @@
 #include "EnumUtils.h"
 #include "unordered_map"
 using CollisionFunc = bool (*)(const glm::vec2&, const Shape&, const glm::vec2&, const Shape&);
-using CollisionMap = std::unordered_multimap<ShapeType, CollisionFunc>;
+using CollisionMap = std::unordered_map<ShapeType, CollisionFunc>;
 CollisionMap ColMap;
 
 
