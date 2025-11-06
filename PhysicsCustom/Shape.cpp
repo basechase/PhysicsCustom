@@ -16,6 +16,13 @@ bool CheckCircleCircle(const glm::vec2& PosA, const Circle& CircleA, const glm::
 
 
   
+bool CheckCircleAABBAABB(const glm::vec2& PosA, const AABB& AABBA, const glm::vec2& PosB, const AABB& AABBB)
+{
+    float DistX = PosA.x - glm::clamp(PosA.x, PosB.x - AABBB.HalfExtents.x, PosB.x + AABBB.HalfExtents.x);
+    float DistY = PosA.y - glm::clamp(PosA.y, PosB.y - AABBB.HalfExtents.y, PosB.y + AABBB.HalfExtents.y);
+
+    return false;
+}
 
 bool CheckCircleCircle(const glm::vec2& PosA, const Shape& ShapeA, const glm::vec2& PosB, const Shape& ShapeB)
 {

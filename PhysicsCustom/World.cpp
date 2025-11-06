@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "PhysObject.h"
 #include "EnumUtils.h"
+#include "iostream"
 #include "unordered_map"
 using CollisionFunc = bool (*)(const glm::vec2&, const Shape&, const glm::vec2&, const Shape&);
 using CollisionMap = std::unordered_map<ShapeType, CollisionFunc>;
@@ -15,20 +16,14 @@ World::World() : AccumulatdFixedTime(0), TargetFixedStep(1.0f/30), Gravity({0, 9
 
 void World::InIt()
 {
-	
-	ColMap[ShapeType::CIRCLE | ShapeType::CIRCLE] = CheckCircleCircle;
 	const int screenWidth = 800;
 	const int screenHeight = 450;
 	
-	PhysObject NewObj;
-	NewObj.MrShape.Type = ShapeType::CIRCLE;
-	NewObj.Pos = { 300,300 };
-	NewObj.MrShape.CircleData.Radius = 10.0f;
-	
-
 	InitWindow(screenWidth, screenHeight, "raylib examp window");
-
+	
 	SetTargetFPS(60);
+	ColMap[ShapeType::CIRCLE | ShapeType::CIRCLE] = CheckCircleCircle;
+	
 	OnInIt();
 }
 
@@ -41,12 +36,29 @@ void World::Tick()
 
 void World::TickFixed()
 {
+
 	AccumulatdFixedTime += GetFrameTime();
 
+	for (auto& i : PhysObjects)
+	{
+		for (auto& j : PhysObjects)
+		{
+			if (&i == &j) { continue; }
+			
+			if (i.MrShape.Type == ShapeType::NONE || j.MrShape.Type == ShapeType::NONE) { continue; }
+
+			ShapeType ColKey = i.MrShape.Type | j.MrShape.Type;
+
+			bool bIsColliding = ColMap[ColKey](i.Pos, i.MrShape, j.Pos, j.MrShape);
+			if (bIsColliding)
+			{
+				std::cout << "collision!!" << std::endl;
+			}
+		}
+	}
 
 
-
-	for (auto Object : PhysObjects)
+	for (auto& Object : PhysObjects)
 	{
 		Object.TickPhys(TargetFixedStep);
 		
@@ -87,3 +99,18 @@ bool World::ShouldTickFixed() const
 	return AccumulatdFixedTime >= TargetFixedStep;
 }
 
+void World::OnTick()
+{
+	if (IsMouseButtonPressed(0))
+	{
+		PhysObject NewObj;
+		NewObj.MrShape.Type = ShapeType::CIRCLE;
+		NewObj.MrShape.CircleData.Radius = 25.0f;
+		NewObj.Pos = { 300,300 };
+		PhysObjects.push_back(NewObj);
+
+		Vector2 CurMouse = GetMousePosition();
+		NewObj.Pos.x = CurMouse.x;
+		NewObj.Pos.y = CurMouse.y;
+	}
+}
