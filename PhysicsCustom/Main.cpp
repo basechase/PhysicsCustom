@@ -11,11 +11,12 @@ int main(void)
 	
 	App->InIt();
 
-	PhysObject* TestInst;
+	PhysObject TestInst;
 	
 	while (!App->ShouldClose())
 	{
 		App->Tick();
+		
 		while (App->ShouldTickFixed())
 		{
 			App->TickFixed();

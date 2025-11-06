@@ -3,9 +3,9 @@
 #include "PhysObject.h"
 #include "EnumUtils.h"
 #include "unordered_map"
-using CollisionFunc = bool(*)(const glm::vec2&, const Shape&, const glm::vec2&, const Shape&);
+using CollisionFunc = bool (*)(const glm::vec2&, const Shape&, const glm::vec2&, const Shape&);
 using CollisionMap = std::unordered_multimap<ShapeType, CollisionFunc>;
-CollisionMap Map;
+CollisionMap ColMap;
 
 
 World::World() : AccumulatdFixedTime(0), TargetFixedStep(1.0f/30), Gravity({0, 9.80665})
@@ -16,12 +16,17 @@ World::World() : AccumulatdFixedTime(0), TargetFixedStep(1.0f/30), Gravity({0, 9
 void World::InIt()
 {
 	
-	Map[ShapeType::CIRCLE | ShapeType::CIRCLE] = CheckCircleCircle;
+	ColMap[ShapeType::CIRCLE | ShapeType::CIRCLE] = CheckCircleCircle;
 	const int screenWidth = 800;
 	const int screenHeight = 450;
 	
+	PhysObject NewObj;
+	NewObj.MrShape.Type = ShapeType::CIRCLE;
+	NewObj.Pos = { 300,300 };
+	NewObj.MrShape.CircleData.Radius = 10.0f;
 	
-	InitWindow(screenWidth, screenHeight, "raylib examp woindow");
+
+	InitWindow(screenWidth, screenHeight, "raylib examp window");
 
 	SetTargetFPS(60);
 	OnInIt();
@@ -43,11 +48,11 @@ void World::TickFixed()
 
 	for (auto Object : PhysObjects)
 	{
-		Object->TickPhys(TargetFixedStep);
+		Object.TickPhys(TargetFixedStep);
 		
-		if (Object->AllowPhys)
+		if (Object.AllowPhys)
 		{
-			Object->Velocity -= Gravity;
+			Object.Velocity -= Gravity;
 		}
 	}
 	OnTick();

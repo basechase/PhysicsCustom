@@ -10,7 +10,7 @@ public:
 
 	
 
-	std::vector<std::shared_ptr<PhysObject>> PhysObjects;
+	std::vector<PhysObject> PhysObjects;
 
 	float TargetFixedStep;
 
