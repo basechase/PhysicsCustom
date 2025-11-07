@@ -24,6 +24,8 @@ void World::InIt()
 	SetTargetFPS(60);
 	ColMap[ShapeType::CIRCLE | ShapeType::CIRCLE] = CheckCircleCircle;
 	
+	 
+	
 	OnInIt();
 }
 
@@ -41,6 +43,7 @@ void World::TickFixed()
 
 	for (auto& i : PhysObjects)
 	{
+		i.Velocity -= Gravity;
 		for (auto& j : PhysObjects)
 		{
 			if (&i == &j) { continue; }
@@ -50,13 +53,13 @@ void World::TickFixed()
 			ShapeType ColKey = i.MrShape.Type | j.MrShape.Type;
 
 			bool bIsColliding = ColMap[ColKey](i.Pos, i.MrShape, j.Pos, j.MrShape);
+			
 			if (bIsColliding)
 			{
 				std::cout << "collision!!" << std::endl;
 			}
 		}
 	}
-
 
 	for (auto& Object : PhysObjects)
 	{
@@ -65,6 +68,7 @@ void World::TickFixed()
 		if (Object.AllowPhys)
 		{
 			Object.Velocity -= Gravity;
+			std::cout << "gravity is doing its thing" << std::endl;
 		}
 	}
 	OnTick();
@@ -72,6 +76,11 @@ void World::TickFixed()
 
 void World::Draw()
 {
+	for (auto& Object : PhysObjects)
+	{
+		Object.Draw();
+	}
+
 	BeginDrawing();
 
 	ClearBackground(RAYWHITE);
@@ -103,15 +112,28 @@ void World::OnTick()
 {
 	if (IsMouseButtonPressed(0))
 	{
-		std::cout << "left clicking" << std::endl;
 		PhysObject NewObj;
-		NewObj.MrShape.Type = ShapeType::CIRCLE;
-		NewObj.MrShape.CircleData.Radius = 25.0f;
-		NewObj.Pos = { 300,300 };
-		PhysObjects.push_back(NewObj);
-
 		Vector2 CurMouse = GetMousePosition();
 		NewObj.Pos.x = CurMouse.x;
 		NewObj.Pos.y = CurMouse.y;
+		std::cout << "left clicking/Draw()" << std::endl;
+		NewObj.MrShape.Type = ShapeType::CIRCLE;
+		NewObj.MrShape.CircleData.Radius = 25.0f;
+		
+		PhysObjects.push_back(NewObj);
+	}
+	if (IsMouseButtonPressed(1))
+	{
+		PhysObject NewObj;
+		Vector2 CurMouse = GetMousePosition();
+		NewObj.Pos.x = CurMouse.x;
+		NewObj.Pos.y = CurMouse.y;
+		std::cout << "right clicking/Draw()" << std::endl;
+		NewObj.MrShape.Type = ShapeType::AABB;
+		NewObj.MrShape.AABBData.x = 10;
+		NewObj.MrShape.AABBData.y = 10;
+		NewObj.MrShape.CircleData.Radius = 25.0f;
+
+		PhysObjects.push_back(NewObj);
 	}
 }

@@ -1,7 +1,8 @@
 #include "PhysObject.h"
 #include "raylib.h"
+const float TARGET_FIXED_TIME_STEP = 1.0f / 30.0f;
 
-PhysObject::PhysObject() : Pos({0,0}), Velocity({0,0}), mass(10.f), MrShape({ShapeType::NONE})
+PhysObject::PhysObject() : Pos({0,0}), Velocity({0,0}), mass(10.f), MrShape({ShapeType::NONE}), AllowPhys(true)
 {
 
 }
@@ -17,9 +18,10 @@ void PhysObject::Draw() const
 		DrawPixel(Pos.x, Pos.y, RED);
 		break;
 	case ShapeType::CIRCLE:
-		DrawCircle(Pos.x, Pos.y, 10, RED);
+		DrawCircle(Pos.x, Pos.y, MrShape.CircleData.Radius, RED);
 		break;
 	case ShapeType::AABB:
+		DrawRectangle(Pos.x, Pos.y, 10, 10, RED);
 		break;
 	default:
 		break;
@@ -38,7 +40,7 @@ void PhysObject::AddVelocity(glm::vec2 Vector)
 
 void PhysObject::AddAccel(glm::vec2 Vector)
 {
-	Acceleration += Vector;
+	Velocity += Vector * TARGET_FIXED_TIME_STEP;
 }
 
 void PhysObject::AddForce(glm::vec2 Vector)
@@ -50,6 +52,7 @@ void PhysObject::AddForce(glm::vec2 Vector)
 
 void PhysObject::TickPhys(float Delta)
 {
-	Velocity += Acceleration * Delta;
+	Velocity += Accumulated;
 	Acceleration = { 0,0 };
+	Velocity += Acceleration * Delta;
 }
