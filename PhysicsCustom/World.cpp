@@ -46,7 +46,7 @@ void World::TickFixed()
 	for (auto& PObj : PhysObjects)
 	{
 		
-		PObj.AddAccel({ 0,9.8 });
+		PObj.AddAccel(Gravity);
 		PObj.TickPhys(TargetFixedStep);
 	}
 
