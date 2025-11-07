@@ -50,7 +50,7 @@ void World::TickFixed()
 		PObj.TickPhys(TargetFixedStep);
 	}
 
-			/*
+			
 
 	for (auto& i : PhysObjects)
 	{
@@ -75,7 +75,7 @@ void World::TickFixed()
 			
 		}
 	}
-			*/
+			
 
 	
 	OnTickFixed();
@@ -123,6 +123,12 @@ void World::OnInIt()
 {
 	PhysObject NewObj;
 	NewObj.Pos = { 300,300 };
+	NewObj.MrShape.CircleData.Radius = 25.0f;
+	NewObj.MrShape.Type = ShapeType::CIRCLE;
+	PhysObjects.push_back(NewObj);
+
+	
+	NewObj.Pos = { 300,285 };
 	NewObj.MrShape.CircleData.Radius = 25.0f;
 	NewObj.MrShape.Type = ShapeType::CIRCLE;
 	PhysObjects.push_back(NewObj);
