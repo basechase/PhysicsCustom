@@ -16,6 +16,8 @@ World::World() : AccumulatdFixedTime(0), TargetFixedStep(1.0f/30), Gravity({0, 9
 
 void World::InIt()
 {
+	
+
 	const int screenWidth = 800;
 	const int screenHeight = 450;
 	
@@ -32,24 +34,36 @@ void World::InIt()
 void World::Tick()
 {
 
-	AccumulatdFixedTime = GetFrameTime();
+	AccumulatdFixedTime += GetFrameTime();
 	OnTick();
 }
 
 void World::TickFixed()
 {
 
-	AccumulatdFixedTime += GetFrameTime();
+	AccumulatdFixedTime -= TargetFixedStep;
+
+	for (auto& PObj : PhysObjects)
+	{
+		
+		PObj.AddAccel({ 0,9.8 });
+		PObj.TickPhys(TargetFixedStep);
+	}
+
+			/*
 
 	for (auto& i : PhysObjects)
 	{
-		i.Velocity -= Gravity;
+		
+		
+	
 		for (auto& j : PhysObjects)
 		{
+			
 			if (&i == &j) { continue; }
 			
 			if (i.MrShape.Type == ShapeType::NONE || j.MrShape.Type == ShapeType::NONE) { continue; }
-
+			
 			ShapeType ColKey = i.MrShape.Type | j.MrShape.Type;
 
 			bool bIsColliding = ColMap[ColKey](i.Pos, i.MrShape, j.Pos, j.MrShape);
@@ -58,20 +72,13 @@ void World::TickFixed()
 			{
 				std::cout << "collision!!" << std::endl;
 			}
+			
 		}
 	}
+			*/
 
-	for (auto& Object : PhysObjects)
-	{
-		Object.TickPhys(TargetFixedStep);
-		
-		if (Object.AllowPhys)
-		{
-			Object.Velocity -= Gravity;
-			std::cout << "gravity is doing its thing" << std::endl;
-		}
-	}
-	OnTick();
+	
+	OnTickFixed();
 }
 
 void World::Draw()
@@ -108,32 +115,15 @@ bool World::ShouldTickFixed() const
 	return AccumulatdFixedTime >= TargetFixedStep;
 }
 
-void World::OnTick()
-{
-	if (IsMouseButtonPressed(0))
-	{
-		PhysObject NewObj;
-		Vector2 CurMouse = GetMousePosition();
-		NewObj.Pos.x = CurMouse.x;
-		NewObj.Pos.y = CurMouse.y;
-		std::cout << "left clicking/Draw()" << std::endl;
-		NewObj.MrShape.Type = ShapeType::CIRCLE;
-		NewObj.MrShape.CircleData.Radius = 25.0f;
-		
-		PhysObjects.push_back(NewObj);
-	}
-	if (IsMouseButtonPressed(1))
-	{
-		PhysObject NewObj;
-		Vector2 CurMouse = GetMousePosition();
-		NewObj.Pos.x = CurMouse.x;
-		NewObj.Pos.y = CurMouse.y;
-		std::cout << "right clicking/Draw()" << std::endl;
-		NewObj.MrShape.Type = ShapeType::AABB;
-		NewObj.MrShape.AABBData.x = 10;
-		NewObj.MrShape.AABBData.y = 10;
-		NewObj.MrShape.CircleData.Radius = 25.0f;
 
-		PhysObjects.push_back(NewObj);
-	}
+
+
+
+void World::OnInIt()
+{
+	PhysObject NewObj;
+	NewObj.Pos = { 300,300 };
+	NewObj.MrShape.CircleData.Radius = 25.0f;
+	NewObj.MrShape.Type = ShapeType::CIRCLE;
+	PhysObjects.push_back(NewObj);
 }

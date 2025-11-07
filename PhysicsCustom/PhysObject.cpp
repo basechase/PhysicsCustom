@@ -2,7 +2,11 @@
 #include "raylib.h"
 const float TARGET_FIXED_TIME_STEP = 1.0f / 30.0f;
 
-PhysObject::PhysObject() : Pos({0,0}), Velocity({0,0}), mass(10.f), MrShape({ShapeType::NONE}), AllowPhys(true)
+PhysObject::PhysObject() : Pos({0,0}), 
+						   Velocity({0,0}), 
+						   mass(1.f), 
+						   MrShape({ShapeType::NONE}),
+						   AllowPhys(true)
 {
 
 }
@@ -53,6 +57,7 @@ void PhysObject::AddForce(glm::vec2 Vector)
 void PhysObject::TickPhys(float Delta)
 {
 	Velocity += Accumulated;
-	Acceleration = { 0,0 };
-	Velocity += Acceleration * Delta;
+	Accumulated= { };
+
+	Pos = Velocity * Delta;
 }

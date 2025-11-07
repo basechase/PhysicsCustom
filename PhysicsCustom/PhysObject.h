@@ -8,11 +8,11 @@ class PhysObject
 public:
 	glm::vec2 Pos;
 	glm::vec2 Velocity;
-	Shape MrShape;
-
-	bool AllowPhys;
 	glm::vec2 Accumulated;
 	glm::vec2 Acceleration;
+
+	Shape MrShape;
+	bool AllowPhys;
 	float mass;
 
 

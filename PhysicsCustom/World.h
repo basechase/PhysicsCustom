@@ -44,16 +44,19 @@ protected:
 	float AccumulatdFixedTime;
 
 	// runs at end of init
-	virtual void OnInIt() {};
+	virtual void OnInIt();
 
 	//runs on end of tick
-	virtual void OnTick();
+	virtual void OnTick() {}
+
+	//runs at the end of TickFixed
+	virtual void OnTickFixed() {}
 
 	// runs at end of darw
-	virtual void OnDraw() const {};
+	virtual void OnDraw() const {}
 
 	//runs on start of exit
-	virtual void OnExit() {};
+	virtual void OnExit() {}
 
 
 
