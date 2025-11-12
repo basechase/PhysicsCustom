@@ -27,7 +27,7 @@ void PhysObject::Draw() const
 		DrawCircle(Pos.x, Pos.y, MrShape.CircleData.Radius, RED);
 		break;
 	case ShapeType::AABB:
-		DrawRectangle(Pos.x, Pos.y, 10, 10, RED);
+		DrawRectangle(Pos.x - MrShape.AABBData.HalfExtents.x, Pos.y - MrShape.AABBData.HalfExtents.y, MrShape.AABBData.HalfExtents.x, MrShape.AABBData.HalfExtents.y, RED);
 		break;
 	default:
 		break;

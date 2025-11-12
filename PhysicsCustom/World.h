@@ -47,7 +47,7 @@ protected:
 	virtual void OnInIt();
 
 	//runs on end of tick
-	virtual void OnTick() {}
+	virtual void OnTick();
 
 	//runs at the end of TickFixed
 	virtual void OnTickFixed() {}

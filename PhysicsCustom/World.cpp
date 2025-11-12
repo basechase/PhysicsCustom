@@ -25,7 +25,8 @@ void World::InIt()
 	
 	SetTargetFPS(60);
 	ColMap[ShapeType::CIRCLE | ShapeType::CIRCLE] = CheckCircleCircle;
-	
+	ColMap[ShapeType::AABB | ShapeType::AABB] = CheckAABBAABB;
+	ColMap[ShapeType::CIRCLE | ShapeType::AABB] = CheckCircleAABB;
 	 
 	
 	OnInIt();
@@ -55,8 +56,6 @@ void World::TickFixed()
 	for (auto& i : PhysObjects)
 	{
 		
-		
-	
 		for (auto& j : PhysObjects)
 		{
 			
@@ -66,12 +65,38 @@ void World::TickFixed()
 			
 			ShapeType ColKey = i.MrShape.Type | j.MrShape.Type;
 
-			bool bIsColliding = ColMap[ColKey](i.Pos, i.MrShape, j.Pos, j.MrShape);
-			
-			if (bIsColliding)
+
+			auto KeyPairIt = ColMap.find(ColKey);
+
+			bool bHasFunc = KeyPairIt != ColMap.end();
+			if (bHasFunc)
 			{
-				std::cout << "collision!!" << std::endl;
+				bool bIsColliding = false;
+
+				PhysObject* First = &i;
+				PhysObject* Second = &j;
+
+				if (i.MrShape.Type > j.MrShape.Type)
+				{
+					bIsColliding = ColMap[ColKey](j.Pos, j.MrShape, i.Pos, i.MrShape);
+				}
+				else 
+				{
+					 bIsColliding = ColMap[ColKey](i.Pos, i.MrShape, j.Pos, j.MrShape);
+				}
+			
+				if (bIsColliding)
+				{
+					std::cout << "collision!!" << std::endl;
+				}
+				else 
+				{
+					std::cout << "UNABLE TO TEST FOR COLL/NO COLL FUNC DEFINED FOR THIS PAIR" << std::endl;
+				}
+			
 			}
+
+			
 			
 		}
 	}
@@ -121,15 +146,39 @@ bool World::ShouldTickFixed() const
 
 void World::OnInIt()
 {
+	
+}
+
+void World::OnTick()
+{
+	if (IsMouseButtonPressed(0)) 
+	{
 	PhysObject NewObj;
-	NewObj.Pos = { 300,300 };
-	NewObj.MrShape.CircleData.Radius = 25.0f;
 	NewObj.MrShape.Type = ShapeType::CIRCLE;
-	PhysObjects.push_back(NewObj);
+	NewObj.MrShape.CircleData.Radius = 25.0f;
 
 	
-	NewObj.Pos = { 300,285 };
-	NewObj.MrShape.CircleData.Radius = 25.0f;
-	NewObj.MrShape.Type = ShapeType::CIRCLE;
+	NewObj.Pos.x = GetMousePosition().x;
+	NewObj.Pos.y = GetMousePosition().y;
+	
 	PhysObjects.push_back(NewObj);
+	
+
+	}
+
+	if (IsMouseButtonPressed(1))
+	{
+		PhysObject NewObj;
+		NewObj.MrShape.Type = ShapeType::AABB;
+		
+
+		NewObj.MrShape.AABBData.HalfExtents = { 30.0f, 25.0f };
+		NewObj.Pos.x = GetMousePosition().x;
+		NewObj.Pos.y = GetMousePosition().y;
+
+		PhysObjects.push_back(NewObj);
+
+
+	}
+
 }
