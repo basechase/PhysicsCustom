@@ -17,11 +17,7 @@ bool CheckCircleCircle(const glm::vec2& PosA, const Circle& CircleA, const glm::
     {
         return false;
     }
-
 }
-
-
-  
 bool CheckCircleAABB(const glm::vec2& PosA, const Shape& ShapeA, const glm::vec2& PosB, const Shape& ShapeB)
 {
     assert(ShapeA.Type == ShapeType::CIRCLE && "Called CheckCircleAABB but a Circle was not provided! for shape 1");
@@ -48,7 +44,6 @@ bool CheckCircleCircle(const glm::vec2& PosA, const Shape& ShapeA, const glm::ve
 
 bool CheckAABBAABB(const glm::vec2& PosA, const AABB& AABBA, const glm::vec2& PosB, const AABB& AABBB)
 {
-
     return PosA.x - AABBA.HalfExtents.x < PosB.x + AABBB.HalfExtents.x &&
            PosA.x + AABBA.HalfExtents.x > PosB.x - AABBB.HalfExtents.x &&
            PosA.y - AABBA.HalfExtents.y < PosB.y + AABBB.HalfExtents.y &&
@@ -76,7 +71,6 @@ glm::vec2 DepenetrateCircleCircle(const glm::vec2& PosA, const Circle& CircleA, 
     /** Return the direction to correct along */
     return glm::normalize(PosB - PosA);
 }
-
 glm::vec2 DepenetrateCircleCircle(const glm::vec2& PosA, const Shape& ShapeA, const glm::vec2& PosB, const Shape& ShapeB, float& Pen)
 {
     return DepenetrateCircleCircle(PosA, ShapeA, PosB, ShapeB, Pen);

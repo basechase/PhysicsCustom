@@ -1,4 +1,5 @@
 #pragma once
+#include "glm/glm.hpp"
 #include "glm/vec2.hpp"
 #include "World.h"
 #include "Shape.h"
@@ -15,12 +16,12 @@ public:
 	bool AllowPhys;
 	float mass;
 
-
 	
-
+	
 	PhysObject();
 
 	void Draw() const;
+
 
 	void AddImpulse(glm::vec2 Vector);
 

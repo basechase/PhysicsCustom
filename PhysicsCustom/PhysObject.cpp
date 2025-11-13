@@ -12,9 +12,6 @@ PhysObject::PhysObject() :
 {
 
 }
-
-
-
 void PhysObject::Draw() const
 {
 	
@@ -33,7 +30,6 @@ void PhysObject::Draw() const
 		break;
 	}
 }
-
 void PhysObject::AddImpulse(glm::vec2 Vector)
 {
 	

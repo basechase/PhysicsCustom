@@ -4,11 +4,15 @@
 #include "EnumUtils.h"
 #include "iostream"
 #include "unordered_map"
+#include "Physics.h"
 using CollisionFunc = bool (*)(const glm::vec2&, const Shape&, const glm::vec2&, const Shape&);
 using CollisionMap = std::unordered_map<ShapeType, CollisionFunc>;
 CollisionMap ColMap;
-
-
+/** Function signature for resolution functions */
+using DepenetrationFunc = glm::vec2(*)(const glm::vec2& PosA, const Shape& ShapeA, const glm::vec2& PosB, const Shape& ShapeB, float& Pen);
+/** Map for associating pairs of collision shapes with their resolution functions */
+using DepenetrationMap = std::unordered_map<ShapeType, DepenetrationFunc>;
+DepenetrationMap DepenMap;
 World::World() : AccumulatdFixedTime(0), TargetFixedStep(1.0f/30), Gravity({0, 9.80665})
 {
 	
@@ -27,8 +31,11 @@ void World::InIt()
 	ColMap[ShapeType::CIRCLE | ShapeType::CIRCLE] = CheckCircleCircle;
 	ColMap[ShapeType::AABB | ShapeType::AABB] = CheckAABBAABB;
 	ColMap[ShapeType::CIRCLE | ShapeType::AABB] = CheckCircleAABB;
-	 
-	
+
+	DepenMap[ShapeType::CIRCLE | ShapeType::CIRCLE] = DepenetrateCircleCircle;
+	DepenMap[ShapeType::AABB | ShapeType::AABB] = DepenetrateCircleCircle;
+	DepenMap[ShapeType::CIRCLE | ShapeType::AABB] = DepenetrateCircleCircle;
+
 	OnInIt();
 }
 
@@ -42,6 +49,8 @@ void World::Tick()
 void World::TickFixed()
 {
 
+	
+
 	AccumulatdFixedTime -= TargetFixedStep;
 
 	for (auto& PObj : PhysObjects)
@@ -49,6 +58,7 @@ void World::TickFixed()
 		
 		PObj.AddAccel(Gravity);
 		PObj.TickPhys(TargetFixedStep);
+
 	}
 
 			
@@ -63,8 +73,14 @@ void World::TickFixed()
 			
 			if (i.MrShape.Type == ShapeType::NONE || j.MrShape.Type == ShapeType::NONE) { continue; }
 			
-			ShapeType ColKey = i.MrShape.Type | j.MrShape.Type;
 
+
+			ShapeType ColKey = i.MrShape.Type | j.MrShape.Type;
+			ShapeType PairType = i.MrShape.Type | j.MrShape.Type;
+				float Pen = 0;
+
+				glm::vec2 Normal = DepenMap[PairType](i.Pos, i.MrShape,
+					j.Pos, j.MrShape, Pen);
 
 			auto KeyPairIt = ColMap.find(ColKey);
 
@@ -75,6 +91,7 @@ void World::TickFixed()
 
 				PhysObject* First = &i;
 				PhysObject* Second = &j;
+
 
 				if (i.MrShape.Type > j.MrShape.Type)
 				{
@@ -88,6 +105,7 @@ void World::TickFixed()
 				if (bIsColliding)
 				{
 					std::cout << "collision!!" << std::endl;
+					ResolvePhysObjects(i, j, 1.0f, Normal, Pen);
 				}
 				else 
 				{
@@ -95,14 +113,8 @@ void World::TickFixed()
 				}
 			
 			}
-
-			
-			
 		}
 	}
-			
-
-	
 	OnTickFixed();
 }
 
